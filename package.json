@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+  "dev": "vite",
+  "build": "vite build"
+}
+}
