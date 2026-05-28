@@ -1,0 +1,143 @@
+.navbar {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--primary-bg);
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.logo span {
+  color: var(--accent-color);
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-main);
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.nav-item:hover {
+  opacity: 1;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.login-link {
+  font-weight: 500;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.login-link:hover {
+  opacity: 1;
+}
+
+.get-started {
+  padding: 0.6rem 1.25rem;
+}
+
+.nav-item.active {
+  color: var(--accent-color);
+  opacity: 1;
+}
+
+.settings-nav-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  color: var(--text-main);
+  transition: all 0.2s ease;
+}
+
+.settings-nav-btn:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+.admin-nav-link {
+  font-size: 0.85rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(251, 146, 60, 0.15);
+  border-radius: 0.5rem;
+}
+
+.user-welcome-btn {
+  background-color: rgba(251, 146, 60, 0.1);
+  border: 1px solid var(--accent-color);
+  color: var(--accent-color);
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: default;
+}
+
+.user-icon {
+  color: var(--accent-color);
+}
+
+.logout-btn {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+
+.back-link-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.back-link-nav:hover {
+  color: #ffffff;
+}
