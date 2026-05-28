@@ -44,6 +44,14 @@ export const adminApi = {
   settings: () => api.get('/admin/settings'),
   updateSettings: (data) => api.put('/admin/settings', data),
   updateContactStatus: (id, status) => api.patch(`/admin/contacts/${id}`, { status }),
+  deleteWorker: (id) => api.delete(`/admin/workers/${id}`),
+};
+
+export const bookingsApi = {
+  createRequest: (data) => api.post('/bookings', data),
+  myOrders: () => api.get('/bookings/my-orders'),
+  workerPanel: () => api.get('/bookings/worker'),
+  workerDecision: (id, data) => api.patch(`/bookings/${id}/decision`, data),
 };
 
 export default api;

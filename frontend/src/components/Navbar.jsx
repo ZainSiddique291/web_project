@@ -32,8 +32,8 @@ const Navbar = () => {
 
   const handleWelcomeClick = () => {
     if (user?.role === 'admin') navigate('/admin');
-    else if (user?.role === 'worker') navigate(`/profile/${user._id}`);
-    else navigate('/settings');
+    else if (user?.role === 'worker') navigate('/worker-panel');
+    else navigate('/my-orders');
   };
 
   return (
@@ -61,6 +61,12 @@ const Navbar = () => {
               </Link>
               {user.role === 'admin' && (
                 <Link to="/admin" className="nav-item admin-nav-link">Admin</Link>
+              )}
+              {user.role === 'customer' && (
+                <Link to="/my-orders" className="nav-item">My Orders</Link>
+              )}
+              {user.role === 'worker' && (
+                <Link to="/worker-panel" className="nav-item">Worker Panel</Link>
               )}
               <button type="button" onClick={logout} className="logout-btn">
                 <LogOut size={16} /> Logout

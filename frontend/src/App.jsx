@@ -13,6 +13,8 @@ import AdminDashboard from './pages/AdminDashboard';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Settings from './pages/Settings';
+import CustomerOrders from './pages/CustomerOrders';
+import WorkerPanel from './pages/WorkerPanel';
 import { AuthProvider } from './context/AuthContext';
 
 function AppRoutes() {
@@ -46,6 +48,22 @@ function AppRoutes() {
             element={
               <ProtectedRoute>
                 <Settings />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-orders"
+            element={
+              <ProtectedRoute allowedRoles={['customer']}>
+                <CustomerOrders />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/worker-panel"
+            element={
+              <ProtectedRoute allowedRoles={['worker']}>
+                <WorkerPanel />
               </ProtectedRoute>
             }
           />

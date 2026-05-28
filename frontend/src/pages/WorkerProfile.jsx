@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Shield, MapPin, Clock, Edit, CheckCircle, Phone, Mail, Star, Wrench, X, ArrowLeft } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { workersApi } from '../api/api';
+import { workersApi, bookingsApi } from '../api/api';
 import { useAuth } from '../context/AuthContext';
 import './WorkerProfile.css';
 
@@ -13,6 +13,9 @@ const WorkerProfile = () => {
   const [worker, setWorker] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [needDescription, setNeedDescription] = useState('');
+  const [customerFair, setCustomerFair] = useState('');
+  const [hireMessage, setHireMessage] = useState('');
 
   useEffect(() => {
     const load = async () => {
@@ -39,6 +42,25 @@ const WorkerProfile = () => {
   };
 
   const isOwnProfile = user?._id === worker?._id;
+  const canHire = user?.role === 'customer' && !isOwnProfile;
+
+  const handleHireRequest = async (e) => {
+    e.preventDefault();
+    setHireMessage('');
+    try {
+      await bookingsApi.createRequest({
+        workerId: worker._id,
+        serviceCategory: wp.category || wp.profession || 'General',
+        needDescription,
+        customerFair: Number(customerFair),
+      });
+      setNeedDescription('');
+      setCustomerFair('');
+      setHireMessage('Booking request sent to worker successfully.');
+    } catch (err) {
+      setHireMessage(err.response?.data?.message || 'Could not send booking request');
+    }
+  };
 
   if (loading) return <div className="page-loading">Loading profile...</div>;
   if (error || !worker) {
@@ -143,8 +165,31 @@ const WorkerProfile = () => {
             </div>
 
             <a href={`mailto:${worker.email}`} className="btn-primary profile-contact-btn">
-              <Mail size={16} /> Hire / Contact
+              <Mail size={16} /> Contact via Email
             </a>
+
+            {canHire && (
+              <form className="hire-request-form" onSubmit={handleHireRequest}>
+                <h4 className="section-title">Hire Request</h4>
+                <textarea
+                  placeholder="Tell your need..."
+                  value={needDescription}
+                  onChange={(e) => setNeedDescription(e.target.value)}
+                  required
+                  rows={3}
+                />
+                <input
+                  type="number"
+                  placeholder="Your fair (PKR)"
+                  value={customerFair}
+                  onChange={(e) => setCustomerFair(e.target.value)}
+                  required
+                  min="1"
+                />
+                <button type="submit" className="btn-primary profile-contact-btn">Send Request</button>
+                {hireMessage && <p className="hire-note">{hireMessage}</p>}
+              </form>
+            )}
           </div>
         </div>
 

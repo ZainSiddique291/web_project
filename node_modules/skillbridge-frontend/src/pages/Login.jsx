@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, UserCheck, MapPin, Shield, Star, Mail, Lock, ArrowRight, UserPlus, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { DEMO_ACCOUNTS } from '../data/demoAccounts';
 import './Login.css';
 
 const Login = () => {
@@ -14,13 +13,6 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showDemoAccounts, setShowDemoAccounts] = useState(false);
-
-  const fillCredentials = (accountEmail, accountPassword) => {
-    setEmail(accountEmail);
-    setPassword(accountPassword);
-    setError('');
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -118,72 +110,6 @@ const Login = () => {
           )}
 
           {error && <div className="error-alert">{error}</div>}
-
-          <div className="demo-accounts-box">
-            <button
-              type="button"
-              className="demo-accounts-toggle"
-              onClick={() => setShowDemoAccounts(!showDemoAccounts)}
-            >
-              {showDemoAccounts ? 'Hide' : 'Show'} demo login accounts
-            </button>
-
-            {showDemoAccounts && (
-              <div className="demo-accounts-list">
-                <div className="demo-account-row">
-                  <div>
-                    <span className="demo-role admin">Admin</span>
-                    <p className="demo-creds">{DEMO_ACCOUNTS.admin.email}</p>
-                    <p className="demo-pass">Password: {DEMO_ACCOUNTS.admin.password}</p>
-                    <p className="demo-note">{DEMO_ACCOUNTS.admin.note}</p>
-                  </div>
-                  <button
-                    type="button"
-                    className="demo-use-btn"
-                    onClick={() => fillCredentials(DEMO_ACCOUNTS.admin.email, DEMO_ACCOUNTS.admin.password)}
-                  >
-                    Use
-                  </button>
-                </div>
-
-                <div className="demo-account-row">
-                  <div>
-                    <span className="demo-role customer">Customer</span>
-                    <p className="demo-creds">{DEMO_ACCOUNTS.customer.email}</p>
-                    <p className="demo-pass">Password: {DEMO_ACCOUNTS.customer.password}</p>
-                    <p className="demo-note">{DEMO_ACCOUNTS.customer.note}</p>
-                  </div>
-                  <button
-                    type="button"
-                    className="demo-use-btn"
-                    onClick={() => fillCredentials(DEMO_ACCOUNTS.customer.email, DEMO_ACCOUNTS.customer.password)}
-                  >
-                    Use
-                  </button>
-                </div>
-
-                <p className="demo-workers-title">Workers (password for all: <strong>worker123</strong>)</p>
-                <div className="demo-workers-scroll">
-                  {DEMO_ACCOUNTS.workers.map((w) => (
-                    <div key={w.email} className="demo-account-row compact">
-                      <div>
-                        <span className="demo-role worker">Worker</span>
-                        <p className="demo-name">{w.name} · {w.profession}</p>
-                        <p className="demo-creds">{w.email}</p>
-                      </div>
-                      <button
-                        type="button"
-                        className="demo-use-btn"
-                        onClick={() => fillCredentials(w.email, w.password)}
-                      >
-                        Use
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
 
           <form onSubmit={handleSubmit} className="auth-form">
             <div className="form-group">

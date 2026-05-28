@@ -125,6 +125,18 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleDeleteWorker = async (id) => {
+    const confirmed = window.confirm('Delete this worker and related bookings?');
+    if (!confirmed) return;
+    try {
+      await adminApi.deleteWorker(id);
+      setUsers((prev) => prev.filter((u) => u._id !== id));
+      loadOverview();
+    } catch {
+      setApiError('Could not delete worker');
+    }
+  };
+
   const menuItems = [
     { id: 'overview', label: 'Overview', icon: Activity },
     { id: 'workers', label: 'Workers', icon: UserCheck },
@@ -472,6 +484,7 @@ const AdminDashboard = () => {
                     {activeTab === 'workers' && <th>Profession</th>}
                     {activeTab === 'workers' && <th>Rating</th>}
                     {activeTab === 'workers' && <th></th>}
+                    {activeTab === 'workers' && <th></th>}
                   </tr>
                 </thead>
                 <tbody>
@@ -486,6 +499,13 @@ const AdminDashboard = () => {
                       {activeTab === 'workers' && (
                         <td>
                           <Link to={`/profile/${u._id}`} className="table-link" target="_blank" rel="noreferrer">View</Link>
+                        </td>
+                      )}
+                      {activeTab === 'workers' && (
+                        <td>
+                          <button type="button" className="admin-action-btn" onClick={() => handleDeleteWorker(u._id)}>
+                            Delete
+                          </button>
                         </td>
                       )}
                     </tr>

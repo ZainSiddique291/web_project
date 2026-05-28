@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import Settings from '../models/Settings.js';
 import Booking from '../models/Booking.js';
+import bcrypt from 'bcryptjs';
 
 const workersSeed = [
   {
@@ -425,6 +426,10 @@ const seedDatabase = async () => {
       }
       console.log('Seeded sample bookings');
     }
+
+    const workerPasswordHash = await bcrypt.hash('worker123', 10);
+    await User.updateMany({ role: 'worker' }, { $set: { password: workerPasswordHash } });
+    console.log('All worker passwords reset to worker123');
   } catch (error) {
     console.error('Seed error:', error.message);
   }

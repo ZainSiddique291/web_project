@@ -98,6 +98,22 @@ export const getAdminUsers = async (req, res) => {
   }
 };
 
+export const deleteWorkerByAdmin = async (req, res) => {
+  try {
+    const worker = await User.findOne({ _id: req.params.id, role: 'worker' });
+    if (!worker) {
+      return res.status(404).json({ message: 'Worker not found' });
+    }
+
+    await Booking.deleteMany({ worker: worker._id });
+    await worker.deleteOne();
+
+    return res.json({ message: 'Worker deleted successfully' });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 export const getAdminBookings = async (req, res) => {
   try {
     const bookings = await Booking.find()

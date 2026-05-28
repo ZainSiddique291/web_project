@@ -9,6 +9,7 @@ import contactRoutes from './routes/contactRoutes.js';
 import workerRoutes from './routes/workerRoutes.js';
 import statsRoutes from './routes/statsRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import bookingRoutes from './routes/bookingRoutes.js';
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/workers', workerRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/bookings', bookingRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'SkillBridge API is running' });

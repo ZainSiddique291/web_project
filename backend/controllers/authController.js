@@ -11,9 +11,28 @@ const generateToken = (id) => {
 // @desc    Register a new user
 // @route   POST /api/auth/register
 // @access  Public
+const parseSkillsList = (text) => {
+  if (!text || typeof text !== 'string') return [];
+  return text
+    .split(/[,;\n]+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+};
+
 export const registerUser = async (req, res) => {
   try {
-    const { firstName, lastName, email, phoneNumber, location, password, role } = req.body;
+    const {
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      location,
+      password,
+      role,
+      profession,
+      skillsDescription,
+    } = req.body;
+    const selectedRole = ['customer', 'worker'].includes(role) ? role : 'customer';
 
     const userExists = await User.findOne({ email });
 
@@ -21,15 +40,27 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: 'User already exists' });
     }
 
-    const user = await User.create({
+    const userPayload = {
       firstName,
       lastName,
       email,
       phoneNumber,
       location,
       password,
-      role: role || 'customer',
-    });
+      role: selectedRole,
+    };
+
+    if (selectedRole === 'worker') {
+      const aboutText = (skillsDescription || '').trim();
+      const skills = parseSkillsList(aboutText);
+      userPayload.workerProfile = {
+        profession: (profession || '').trim() || 'Skilled Professional',
+        about: aboutText,
+        skills: skills.length ? skills : ['General Services'],
+      };
+    }
+
+    const user = await User.create(userPayload);
 
     if (user) {
       res.status(201).json({
@@ -41,6 +72,7 @@ export const registerUser = async (req, res) => {
         phoneNumber: user.phoneNumber,
         location: user.location,
         role: user.role,
+        workerProfile: user.workerProfile,
         token: generateToken(user._id),
       });
     } else {
@@ -110,7 +142,20 @@ export const updateProfile = async (req, res) => {
     if (phoneNumber !== undefined) user.phoneNumber = phoneNumber;
     if (location !== undefined) user.location = location;
     if (workerProfile && user.role === 'worker') {
-      user.workerProfile = { ...user.workerProfile?.toObject?.() || user.workerProfile, ...workerProfile };
+      const current = user.workerProfile?.toObject?.() || user.workerProfile || {};
+      const merged = { ...current, ...workerProfile };
+
+      if (workerProfile.skills !== undefined) {
+        merged.skills = Array.isArray(workerProfile.skills)
+          ? workerProfile.skills
+          : parseSkillsList(workerProfile.skills);
+      }
+
+      if (workerProfile.about !== undefined && !merged.skills?.length) {
+        merged.skills = parseSkillsList(workerProfile.about);
+      }
+
+      user.workerProfile = merged;
     }
 
     const updated = await user.save();

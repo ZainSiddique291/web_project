@@ -3,6 +3,7 @@ import { protect, adminOnly } from '../middleware/authMiddleware.js';
 import {
   getAdminOverview,
   getAdminUsers,
+  deleteWorkerByAdmin,
   getAdminBookings,
   updateAdminSettings,
   updateContactStatus,
@@ -16,6 +17,7 @@ router.use(protect, adminOnly);
 
 router.get('/overview', getAdminOverview);
 router.get('/users', getAdminUsers);
+router.delete('/workers/:id', deleteWorkerByAdmin);
 router.get('/bookings', getAdminBookings);
 router.get('/contacts', getContacts);
 router.get('/settings', getPublicSettings);

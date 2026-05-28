@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { User, Phone, MapPin, Save, Shield, Briefcase } from 'lucide-react';
+import { User, Phone, MapPin, Save, Shield, Briefcase, Wrench } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { authApi } from '../api/api';
+import { parseSkillsFromText, skillsToText } from '../utils/skills';
 import './Settings.css';
 
 const Settings = () => {
@@ -13,6 +14,9 @@ const Settings = () => {
     lastName: '',
     phoneNumber: '',
     location: '',
+    profession: '',
+    about: '',
+    skillsText: '',
   });
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
@@ -23,11 +27,15 @@ const Settings = () => {
       navigate('/login');
       return;
     }
+    const wp = user.workerProfile || {};
     setForm({
       firstName: user.firstName || '',
       lastName: user.lastName || '',
       phoneNumber: user.phoneNumber || '',
       location: user.location || '',
+      profession: wp.profession || '',
+      about: wp.about || '',
+      skillsText: skillsToText(wp.skills),
     });
   }, [user, navigate]);
 
@@ -41,7 +49,23 @@ const Settings = () => {
     setError('');
     setMessage('');
     try {
-      const { data } = await authApi.updateProfile(form);
+      const payload = {
+        firstName: form.firstName,
+        lastName: form.lastName,
+        phoneNumber: form.phoneNumber,
+        location: form.location,
+      };
+
+      if (user.role === 'worker') {
+        const skills = parseSkillsFromText(form.skillsText);
+        payload.workerProfile = {
+          profession: form.profession,
+          about: form.about,
+          skills: skills.length ? skills : parseSkillsFromText(form.about),
+        };
+      }
+
+      const { data } = await authApi.updateProfile(payload);
       updateUser(data);
       setMessage('Profile updated successfully.');
     } catch (err) {
@@ -78,8 +102,14 @@ const Settings = () => {
           )}
 
           {user.role === 'worker' && (
-            <Link to={`/profile/${user._id}`} className="btn-outline settings-profile-link">
-              <Briefcase size={16} /> View Public Profile
+            <Link to="/worker-panel" className="btn-outline settings-profile-link">
+              <Briefcase size={16} /> Open Worker Panel
+            </Link>
+          )}
+
+          {user.role === 'customer' && (
+            <Link to="/my-orders" className="btn-outline settings-profile-link">
+              <Briefcase size={16} /> Open My Orders
             </Link>
           )}
 
@@ -105,6 +135,38 @@ const Settings = () => {
               <label><MapPin size={14} /> Location</label>
               <input name="location" value={form.location} onChange={handleChange} />
             </div>
+
+            {user.role === 'worker' && (
+              <div className="settings-worker-block">
+                <h3><Wrench size={16} /> Worker Profile</h3>
+                <div className="form-group">
+                  <label>Profession</label>
+                  <input name="profession" value={form.profession} onChange={handleChange} placeholder="e.g. Electrician" />
+                </div>
+                <div className="form-group">
+                  <label>About / Description</label>
+                  <textarea
+                    name="about"
+                    value={form.about}
+                    onChange={handleChange}
+                    rows={4}
+                    placeholder="Tell customers about your experience and services"
+                    className="settings-textarea"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Skills & Expertise</label>
+                  <input
+                    name="skillsText"
+                    value={form.skillsText}
+                    onChange={handleChange}
+                    placeholder="Wiring, Panel repair, Lighting (comma-separated)"
+                  />
+                  <p className="settings-field-hint">Shown as tags on your public profile. Separate each skill with a comma.</p>
+                </div>
+              </div>
+            )}
+
             <button type="submit" className="btn-primary" disabled={loading}>
               <Save size={16} /> {loading ? 'Saving...' : 'Save Changes'}
             </button>

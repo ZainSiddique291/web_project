@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Shield, Mail, Lock, User, Phone, MapPin, Eye, EyeOff, UserPlus } from 'lucide-react';
+import { Shield, Mail, Lock, User, Phone, MapPin, Eye, EyeOff, UserPlus, Briefcase, Wrench } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import './Register.css';
 
@@ -15,6 +15,9 @@ const Register = () => {
     phoneNumber: '',
     location: '',
     password: '',
+    role: 'customer',
+    profession: '',
+    skillsDescription: '',
     agreeToTerms: false
   });
 
@@ -39,6 +42,11 @@ const Register = () => {
       return;
     }
 
+    if (formData.role === 'worker' && !formData.skillsDescription.trim()) {
+      setError('Please describe your skills and expertise');
+      return;
+    }
+
     setLoading(true);
     const result = await register({
       firstName: formData.firstName,
@@ -47,13 +55,18 @@ const Register = () => {
       phoneNumber: formData.phoneNumber,
       location: formData.location,
       password: formData.password,
-      role: 'customer' // default role
+      role: formData.role,
+      ...(formData.role === 'worker' && {
+        profession: formData.profession,
+        skillsDescription: formData.skillsDescription.trim(),
+      }),
     });
 
     setLoading(false);
 
     if (result.success) {
       if (result.user?.role === 'admin') navigate('/admin');
+      else if (result.user?.role === 'worker') navigate('/worker-panel');
       else navigate('/');
     } else {
       setError(result.message);
@@ -239,6 +252,42 @@ const Register = () => {
               </div>
               <p className="password-hint">Enter a password</p>
             </div>
+
+            <div className="form-group">
+              <label>Register As</label>
+              <select name="role" value={formData.role} onChange={handleChange} required className="register-select">
+                <option value="customer">Customer</option>
+                <option value="worker">Worker</option>
+              </select>
+            </div>
+
+            {formData.role === 'worker' && (
+              <div className="worker-register-fields">
+                <div className="form-group">
+                  <label><Briefcase size={14} /> Profession / Job Title</label>
+                  <input
+                    type="text"
+                    name="profession"
+                    value={formData.profession}
+                    onChange={handleChange}
+                    placeholder="e.g. Electrician, Plumber, Tutor"
+                  />
+                </div>
+                <div className="form-group">
+                  <label><Wrench size={14} /> Skills & Description</label>
+                  <textarea
+                    name="skillsDescription"
+                    value={formData.skillsDescription}
+                    onChange={handleChange}
+                    placeholder="Describe your experience and list skills (comma-separated), e.g. Wiring, Panel repair, Emergency fixes"
+                    rows={4}
+                    required
+                    className="register-textarea"
+                  />
+                  <p className="field-hint">This appears in your profile &quot;About&quot; and as skill tags. Separate skills with commas.</p>
+                </div>
+              </div>
+            )}
 
             <div className="form-group checkbox-group">
               <input 

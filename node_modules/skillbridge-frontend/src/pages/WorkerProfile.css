@@ -239,6 +239,26 @@
   width: 100%;
 }
 
+.hire-request-form {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.hire-request-form textarea,
+.hire-request-form input {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 0.6rem 0.7rem;
+}
+
+.hire-note {
+  color: #0f766e;
+  font-size: 0.9rem;
+}
+
 .profile-error {
   padding: 4rem 2rem;
   text-align: center;
