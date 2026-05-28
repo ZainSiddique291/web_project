@@ -1,17 +1,25 @@
-# AI Prompt Log
+AI prompts:
 
-Here are 8 humanized commands representing the main project tasks from this coding session:
+I want to make a project of freelance marketplace for local skilled workers in react and node js with mongo db.
+Give me the structure of the project and code of each file.
 
-1. Create an `AI_PROMPT.md` file in the project root and list the last eight prompts we used.
-2. Save the final backend and MongoDB Atlas questions into a new prompt log file.
-3. Write a clear prompt history file with the last eight code-related instructions.
-4. Add a human-readable command list for the database and deployment conversation.
-5. Make a prompt file documenting eight key requests from this project session.
-6. Record the important AI prompts used while checking the Atlas database name.
-7. Generate a simple prompt log file for the final coding phase.
-8. Create a project prompt history document that captures the main user requests.
+Add a worker panel and admin panel also in it.
 
-## Notes
+Add customer and worker in registration page.
 
-- This file contains the AI prompt commands requested for the current coding phase.
-- The file name is `AiPrompt.md` to match the existing root document.
+Change the color of details in worker panel and make it user friendly.
+
+How to connect it to render for deployment of backend when frontend is deployed on vercel and mongodb atlas is used.
+
+Where to put link of render in my project so the frontend is connected to backend.
+
+npm error Lifecycle script `build` failed with error:
+npm error workspace skillbridge-backend@1.0.0
+npm error location D:\web_project\web_project\backend
+npm error Missing script: "build"
+npm error
+npm error To see a list of scripts, run:
+npm error   npm run --workspace=skillbridge-backend@1.0.0
+tell me about this error and how to solve it.
+
+How to run ci/cd pipeline.
